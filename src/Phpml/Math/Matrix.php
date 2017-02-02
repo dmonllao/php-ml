@@ -41,7 +41,7 @@ class Matrix
         $this->columns = count($matrix[0]);
 
         if ($validate) {
-            for ($i = 0; $i < $this->rows; ++$i) {
+            for($i = 0; $i < $this->rows; ++$i) {
                 if (count($matrix[$i]) !== $this->columns) {
                     throw InvalidArgumentException::matrixDimensionsDidNotMatch();
                 }
