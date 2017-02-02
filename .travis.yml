@@ -22,8 +22,9 @@ before_install:
 
 install:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash tools/handle_brew_pkg.sh "${_PHP}" ; fi
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --no-interaction --ignore-platform-reqs
+  - travis_retry composer install --no-interaction --ignore-platform-reqs
+  - travis_retry composer global require friendsofphp/php-cs-fixer
 
 script:
   - bin/phpunit
+  - tools/php-cs-fixer.sh
