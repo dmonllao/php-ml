@@ -6,7 +6,6 @@ namespace Phpml\Exception;
 
 class SerializeException extends \Exception
 {
-
     /**
      * @param string $filepath
      *
@@ -26,5 +25,4 @@ class SerializeException extends \Exception
     {
         return new self(sprintf('Class "%s" can not be serialized.', $classname));
     }
-
 }

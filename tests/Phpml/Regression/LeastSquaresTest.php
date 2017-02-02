@@ -89,5 +89,4 @@ class LeastSquaresTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($regression, $restoredRegression);
         $this->assertEquals($predicted, $restoredRegression->predict($testSamples));
     }
-
 }

@@ -20,6 +20,7 @@ class FuzzyCMeansTest extends \PHPUnit_Framework_TestCase
             }
         }
         $this->assertCount(0, $samples);
+
         return $fcm;
     }
 

@@ -38,7 +38,6 @@ class SVRTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveAndRestore()
     {
-
         $samples = [[60], [61], [62], [63], [65]];
         $targets = [3.1, 3.6, 3.8, 4, 4.1];
 
@@ -57,5 +56,4 @@ class SVRTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($regression, $restoredRegression);
         $this->assertEquals($predicted, $restoredRegression->predict($testSamples));
     }
-
 }

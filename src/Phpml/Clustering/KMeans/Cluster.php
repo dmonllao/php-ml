@@ -136,10 +136,10 @@ class Cluster extends Point implements IteratorAggregate, Countable
     {
         return count($this->points);
     }
-    
+
     /**
-    * @param array $newCoordinates
-    */
+     * @param array $newCoordinates
+     */
     public function setCoordinates(array $newCoordinates)
     {
         $this->coordinates = $newCoordinates;

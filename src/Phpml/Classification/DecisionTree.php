@@ -76,16 +76,18 @@ class DecisionTree implements Classifier
     protected function getColumnTypes(array $samples)
     {
         $types = [];
-        for ($i=0; $i<$this->featureCount; $i++) {
+        for ($i = 0; $i < $this->featureCount; ++$i) {
             $values = array_column($samples, $i);
             $isCategorical = $this->isCategoricalColumn($values);
             $types[] = $isCategorical ? self::NOMINAL : self::CONTINUOS;
         }
+
         return $types;
     }
 
     /**
      * @param null|array $records
+     *
      * @return DecisionTreeLeaf
      */
     protected function getSplitLeaf($records, $depth = 0)
@@ -96,7 +98,7 @@ class DecisionTree implements Classifier
             $this->actualDepth = $depth;
         }
         $leftRecords = [];
-        $rightRecords= [];
+        $rightRecords = [];
         $remainingTargets = [];
         $prevRecord = null;
         $allSame = true;
@@ -109,10 +111,10 @@ class DecisionTree implements Classifier
             if ($split->evaluate($record)) {
                 $leftRecords[] = $recordNo;
             } else {
-                $rightRecords[]= $recordNo;
+                $rightRecords[] = $recordNo;
             }
             $target = $this->targets[$recordNo];
-            if (! in_array($target, $remainingTargets)) {
+            if (!in_array($target, $remainingTargets)) {
                 $remainingTargets[] = $target;
             }
         }
@@ -127,14 +129,16 @@ class DecisionTree implements Classifier
                 $split->leftLeaf = $this->getSplitLeaf($leftRecords, $depth + 1);
             }
             if ($rightRecords) {
-                $split->rightLeaf= $this->getSplitLeaf($rightRecords, $depth + 1);
+                $split->rightLeaf = $this->getSplitLeaf($rightRecords, $depth + 1);
             }
         }
+
         return $split;
     }
 
     /**
      * @param array $records
+     *
      * @return DecisionTreeLeaf[]
      */
     protected function getBestSplit($records)
@@ -144,7 +148,7 @@ class DecisionTree implements Classifier
         $samples = array_combine($records, $this->preprocess($samples));
         $bestGiniVal = 1;
         $bestSplit = null;
-        for ($i=0; $i<$this->featureCount; $i++) {
+        for ($i = 0; $i < $this->featureCount; ++$i) {
             $colValues = [];
             $baseValue = null;
             foreach ($samples as $index => $row) {
@@ -164,13 +168,14 @@ class DecisionTree implements Classifier
                 $bestGiniVal = $gini;
             }
         }
+
         return $bestSplit;
     }
 
     /**
      * @param string $baseValue
-     * @param array $colValues
-     * @param array $targets
+     * @param array  $colValues
+     * @param array  $targets
      */
     public function getGiniIndex($baseValue, $colValues, $targets)
     {
@@ -181,10 +186,10 @@ class DecisionTree implements Classifier
         foreach ($colValues as $index => $value) {
             $label = $targets[$index];
             $rowIndex = $value == $baseValue ? 0 : 1;
-            $countMatrix[$label][$rowIndex]++;
+            ++$countMatrix[$label][$rowIndex];
         }
         $giniParts = [0, 0];
-        for ($i=0; $i<=1; $i++) {
+        for ($i = 0; $i <= 1; ++$i) {
             $part = 0;
             $sum = array_sum(array_column($countMatrix, $i));
             if ($sum > 0) {
@@ -194,11 +199,13 @@ class DecisionTree implements Classifier
             }
             $giniParts[$i] = (1 - $part) * $sum;
         }
+
         return array_sum($giniParts) / count($colValues);
     }
 
     /**
      * @param array $samples
+     *
      * @return array
      */
     protected function preprocess(array $samples)
@@ -206,7 +213,7 @@ class DecisionTree implements Classifier
         // Detect and convert continuous data column values into
         // discrete values by using the median as a threshold value
         $columns = [];
-        for ($i=0; $i<$this->featureCount; $i++) {
+        for ($i = 0; $i < $this->featureCount; ++$i) {
             $values = array_column($samples, $i);
             if ($this->columnTypes[$i] == self::CONTINUOS) {
                 $median = Mean::median($values);
@@ -227,6 +234,7 @@ class DecisionTree implements Classifier
 
     /**
      * @param array $columnValues
+     *
      * @return bool
      */
     protected function isCategoricalColumn(array $columnValues)
@@ -245,6 +253,7 @@ class DecisionTree implements Classifier
         if (count($distinctValues) <= $count / 5) {
             return true;
         }
+
         return false;
     }
 
@@ -258,6 +267,7 @@ class DecisionTree implements Classifier
 
     /**
      * @param array $sample
+     *
      * @return mixed
      */
     protected function predictSample(array $sample)
@@ -273,6 +283,7 @@ class DecisionTree implements Classifier
                 $node = $node->rightLeaf;
             }
         } while ($node);
+
         return $node->classValue;
     }
 }

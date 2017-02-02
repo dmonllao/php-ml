@@ -86,10 +86,10 @@ class FuzzyCMeans implements Clusterer
     protected function generateRandomMembership(int $rows, int $cols)
     {
         $this->membership = [];
-        for ($i=0; $i < $rows; $i++) {
+        for ($i = 0; $i < $rows; ++$i) {
             $row = [];
             $total = 0.0;
-            for ($k=0; $k < $cols; $k++) {
+            for ($k = 0; $k < $cols; ++$k) {
                 $val = rand(1, 5) / 10.0;
                 $row[] = $val;
                 $total += $val;
@@ -103,17 +103,17 @@ class FuzzyCMeans implements Clusterer
     protected function updateClusters()
     {
         $dim = $this->space->getDimension();
-        if (! $this->clusters) {
+        if (!$this->clusters) {
             $this->clusters = [];
-            for ($i=0; $i<$this->clustersNumber; $i++) {
+            for ($i = 0; $i < $this->clustersNumber; ++$i) {
                 $this->clusters[] = new Cluster($this->space, array_fill(0, $dim, 0.0));
             }
         }
 
-        for ($i=0; $i<$this->clustersNumber; $i++) {
+        for ($i = 0; $i < $this->clustersNumber; ++$i) {
             $cluster = $this->clusters[$i];
             $center = $cluster->getCoordinates();
-            for ($k=0; $k<$dim; $k++) {
+            for ($k = 0; $k < $dim; ++$k) {
                 $a = $this->getMembershipRowTotal($i, $k, true);
                 $b = $this->getMembershipRowTotal($i, $k, false);
                 $center[$k] = $a / $b;
@@ -125,20 +125,21 @@ class FuzzyCMeans implements Clusterer
     protected function getMembershipRowTotal(int $row, int $col, bool $multiply)
     {
         $sum = 0.0;
-        for ($k = 0; $k < $this->sampleCount; $k++) {
+        for ($k = 0; $k < $this->sampleCount; ++$k) {
             $val = pow($this->membership[$row][$k], $this->fuzziness);
             if ($multiply) {
                 $val *= $this->samples[$k][$col];
             }
             $sum += $val;
         }
+
         return $sum;
     }
 
     protected function updateMembershipMatrix()
     {
-        for ($i = 0; $i < $this->clustersNumber; $i++) {
-            for ($k = 0; $k < $this->sampleCount; $k++) {
+        for ($i = 0; $i < $this->clustersNumber; ++$i) {
+            for ($k = 0; $k < $this->sampleCount; ++$k) {
                 $distCalc = $this->getDistanceCalc($i, $k);
                 $this->membership[$i][$k] = 1.0 / $distCalc;
             }
@@ -146,9 +147,9 @@ class FuzzyCMeans implements Clusterer
     }
 
     /**
-     *
      * @param int $row
      * @param int $col
+     *
      * @return float
      */
     protected function getDistanceCalc(int $row, int $col)
@@ -158,32 +159,34 @@ class FuzzyCMeans implements Clusterer
         $dist1 = $distance->distance(
                 $this->clusters[$row]->getCoordinates(),
                 $this->samples[$col]);
-        for ($j = 0; $j < $this->clustersNumber; $j++) {
+        for ($j = 0; $j < $this->clustersNumber; ++$j) {
             $dist2 = $distance->distance(
                 $this->clusters[$j]->getCoordinates(),
                 $this->samples[$col]);
             $val = pow($dist1 / $dist2, 2.0 / ($this->fuzziness - 1));
             $sum += $val;
         }
+
         return $sum;
     }
 
     /**
      * The objective is to minimize the distance between all data points
      * and all cluster centers. This method returns the summation of all
-     * these distances
+     * these distances.
      */
     protected function getObjective()
     {
         $sum = 0.0;
         $distance = new Euclidean();
-        for ($i = 0; $i < $this->clustersNumber; $i++) {
+        for ($i = 0; $i < $this->clustersNumber; ++$i) {
             $clust = $this->clusters[$i]->getCoordinates();
-            for ($k = 0; $k < $this->sampleCount; $k++) {
+            for ($k = 0; $k < $this->sampleCount; ++$k) {
                 $point = $this->samples[$k];
                 $sum += $distance->distance($clust, $point);
             }
         }
+
         return $sum;
     }
 
@@ -197,13 +200,14 @@ class FuzzyCMeans implements Clusterer
 
     /**
      * @param array|Point[] $samples
+     *
      * @return array
      */
     public function cluster(array $samples)
     {
         // Initialize variables, clusters and membership matrix
         $this->sampleCount = count($samples);
-        $this->samples =& $samples;
+        $this->samples = &$samples;
         $this->space = new Space(count($samples[0]));
         $this->initClusters();
 
@@ -224,7 +228,7 @@ class FuzzyCMeans implements Clusterer
         } while ($difference > $this->epsilon && $iterations++ <= $this->maxIterations);
 
         // Attach (hard cluster) each data point to the nearest cluster
-        for ($k=0; $k<$this->sampleCount; $k++) {
+        for ($k = 0; $k < $this->sampleCount; ++$k) {
             $column = array_column($this->membership, $k);
             arsort($column);
             reset($column);
@@ -238,6 +242,7 @@ class FuzzyCMeans implements Clusterer
         foreach ($this->clusters as $cluster) {
             $grouped[] = $cluster->getPoints();
         }
+
         return $grouped;
     }
 }

@@ -9,7 +9,6 @@ use Phpml\Regression\LeastSquares;
 
 class ModelManagerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testSaveAndRestore()
     {
         $filename = 'test-save-to-file-'.rand(100, 999).'-'.uniqid();
@@ -28,7 +27,7 @@ class ModelManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveToWrongFile()
     {
-        $filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'unexisting';
+        $filepath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'unexisting';
 
         $obj = new LeastSquares();
         $modelManager = new ModelManager();
@@ -40,7 +39,7 @@ class ModelManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRestoreWrongFile()
     {
-        $filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'unexisting';
+        $filepath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'unexisting';
         $modelManager = new ModelManager();
         $modelManager->restoreFromFile($filepath);
     }

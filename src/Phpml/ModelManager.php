@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Phpml;
 
-use Phpml\Estimator;
 use Phpml\Exception\SerializeException;
 use Phpml\Exception\FileException;
 
 class ModelManager
 {
     /**
-     * @param Estimator     $object
-     * @param string        $filepath
+     * @param Estimator $object
+     * @param string    $filepath
      */
     public function saveToFile(Estimator $object, string $filepath)
     {
