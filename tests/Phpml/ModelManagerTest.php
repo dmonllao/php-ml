@@ -28,7 +28,7 @@ class ModelManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveToWrongFile()
     {
-        $filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'unexisting';
+        $filepath = '/really-really-unlikely-to-exist-dir/save-unexisting-file';
 
         $obj = new LeastSquares();
         $modelManager = new ModelManager();
@@ -40,7 +40,7 @@ class ModelManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRestoreWrongFile()
     {
-        $filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'unexisting';
+        $filepath = '/really-really-unlikely-to-exist-dir/restore-unexisting-file';
         $modelManager = new ModelManager();
         $modelManager->restoreFromFile($filepath);
     }

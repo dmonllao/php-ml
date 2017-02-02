@@ -16,7 +16,8 @@ class ModelManager
      */
     public function saveToFile(Estimator $object, string $filepath)
     {
-        if (!file_exists($filepath) || !is_writable(dirname($filepath))) {
+        if (!is_writable(dirname($filepath)) ||
+                (file_exists($filepath) && !is_writable($filepath))) {
             throw FileException::cantSaveFile(basename($filepath));
         }
 
