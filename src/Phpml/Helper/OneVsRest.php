@@ -32,6 +32,9 @@ trait OneVsRest
      */
     public function train(array $samples, array $targets)
     {
+        // Clears previous stuff.
+        $this->reset();
+
         return $this->trainBylabel($samples, $targets);
     }
 
@@ -86,12 +89,15 @@ trait OneVsRest
     }
 
     /**
-     * Resets the internal vars used by OneVsRest instances.
+     * Resets the classifier and the vars internally used by OneVsRest to create multiple classifiers.
      */
-    public function reset() {
+    public function reset()
+    {
         $this->classifiers = [];
         $this->allLabels = [];
         $this->costValues = [];
+
+        $this->resetBinary();
     }
 
     /**
@@ -99,7 +105,8 @@ trait OneVsRest
      *
      * @return \Phpml\Estimator
      */
-    protected function getClassifierCopy() {
+    protected function getClassifierCopy()
+    {
 
         // Clone the current classifier, so that
         // we don't mess up its variables while training
@@ -162,6 +169,15 @@ trait OneVsRest
      * @param array $labels
      */
     abstract protected function trainBinary(array $samples, array $targets, array $labels);
+
+    /**
+     * To be overwritten by OneVsRest classifiers that support partialTrain.
+     *
+     * @return void
+     */
+    protected function resetBinary()
+    {
+    }
 
     /**
      * Each classifier that make use of OvR approach should be able to

@@ -10,25 +10,22 @@ use Phpml\Helper\Optimizer\StochasticGD;
 use Phpml\Helper\Optimizer\GD;
 use Phpml\Classification\Classifier;
 use Phpml\Preprocessing\Normalizer;
-use Phpml\PartialTrainer;
+use Phpml\IncrementalEstimator;
 use Phpml\Helper\PartiallyTrainable;
 
-class Perceptron implements Classifier, PartialTrainer
+class Perceptron implements Classifier, IncrementalEstimator
 {
-    use Predictable, PartiallyTrainable, OneVsRest {
-        reset as public resetOneVsRest;
-        PartiallyTrainable::train insteadof OneVsRest;
-    }
-
-    /**
-     * @var array
-     */
-    protected $labels = [];
+    use Predictable, OneVsRest;
 
     /**
      * @var \Phpml\Helper\Optimizer\Optimizer
      */
     protected $optimizer;
+
+    /**
+     * @var array
+     */
+    protected $labels = [];
 
     /**
      * @var int
@@ -93,7 +90,13 @@ class Perceptron implements Classifier, PartialTrainer
         $this->maxIterations = $maxIterations;
     }
 
-    public function partialTrain(array $samples, array $targets, array $labels = array()) {
+    /**
+     * @param array $samples
+     * @param array $targets
+     * @param array $labels
+     */
+    public function partialTrain(array $samples, array $targets, array $labels = array())
+    {
         return $this->trainByLabel($samples, $targets, $labels);
     }
 
@@ -121,13 +124,13 @@ class Perceptron implements Classifier, PartialTrainer
         $this->runTraining($samples, $targets);
     }
 
-    public function resetTrainer() {
+    protected function resetBinary()
+    {
         $this->labels = [];
         $this->optimizer = null;
         $this->featureCount = 0;
         $this->weights = null;
         $this->costValues = [];
-        $this->resetOneVsRest();
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Phpml;
 
-interface PartialTrainer
+interface IncrementalEstimator
 {
 
     /**
