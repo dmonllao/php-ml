@@ -61,12 +61,15 @@ trait OneVsRest
                 $this->classifiers[$label] = $predictor;
             }
         }
-        
+
         // If the underlying classifier is capable of giving the cost values
         // during the training, then assign it to the relevant variable
-        if (method_exists($this->classifiers[0], 'getCostValues')) {
-            $this->costValues = $this->classifiers[0]->getCostValues();
+        // Adding just the first classifier cost values to avoid complex average calculations.
+        $classifierref = reset($this->classifiers);
+        if (method_exists($classifierref, 'getCostValues')) {
+            $this->costValues = $classifierref->getCostValues();
         }
+
     }
 
     /**
