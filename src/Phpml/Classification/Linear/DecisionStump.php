@@ -344,6 +344,13 @@ class DecisionStump extends WeightedClassifier
     }
 
     /**
+     * @return void
+     */
+    protected function resetBinary()
+    {
+    }
+
+    /**
      * @return string
      */
     public function __toString()

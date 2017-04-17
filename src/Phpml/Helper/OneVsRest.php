@@ -171,13 +171,11 @@ trait OneVsRest
     abstract protected function trainBinary(array $samples, array $targets, array $labels);
 
     /**
-     * To be overwritten by OneVsRest classifiers that support partialTrain.
+     * To be overwritten by OneVsRest classifiers.
      *
      * @return void
      */
-    protected function resetBinary()
-    {
-    }
+    abstract protected function resetBinary();
 
     /**
      * Each classifier that make use of OvR approach should be able to
