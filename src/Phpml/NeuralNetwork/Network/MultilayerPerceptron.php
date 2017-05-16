@@ -11,25 +11,75 @@ use Phpml\NeuralNetwork\Node\Bias;
 use Phpml\NeuralNetwork\Node\Input;
 use Phpml\NeuralNetwork\Node\Neuron;
 use Phpml\NeuralNetwork\Node\Neuron\Synapse;
+use Phpml\Helper\Predictable;
 
 class MultilayerPerceptron extends LayeredNetwork
 {
+    use Predictable;
+
     /**
-     * @param array                   $layers
+     * @var array
+     */
+    private $classes = [];
+
+    /**
+     * @param int                     $inputLayerFeatures
+     * @param array                   $hiddenLayers
+     * @param array                   $classes
      * @param ActivationFunction|null $activationFunction
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $layers, ActivationFunction $activationFunction = null)
+    public function __construct(int $inputLayerFeatures, array $hiddenLayers, array $classes, ActivationFunction $activationFunction = null)
     {
-        if (count($layers) < 2) {
+        if (count($inputLayerFeatures) < 1) {
             throw InvalidArgumentException::invalidLayersNumber();
         }
 
-        $this->addInputLayer(array_shift($layers));
-        $this->addNeuronLayers($layers, $activationFunction);
+        $nClasses = count($classes);
+        if ($nClasses < 2) {
+            throw InvalidArgumentException::invalidClassesNumber();
+        }
+        $this->classes = $classes;
+
+        $this->addInputLayer($inputLayerFeatures);
+        $this->addNeuronLayers($hiddenLayers, $activationFunction);
+        $this->addNeuronLayers([$nClasses], $activationFunction);
+
         $this->addBiasNodes();
         $this->generateSynapses();
+    }
+
+    /**
+     * @param  mixed $target
+     * @return int
+     */
+    public function getTargetClass($target): int
+    {
+        if (in_array($target, $this->classes) === false) {
+            throw InvalidArgumentException::invalidTarget($target);
+        }
+        return array_search($target, $this->classes);
+    }
+
+    /**
+     * @param array $sample
+     *
+     * @return mixed
+     */
+    public function predictSample(array $sample)
+    {
+        $output = $this->setInput($sample)->getOutput();
+
+        $predictedClass = null;
+        $max = 0;
+        foreach ($output as $class => $value) {
+            if ($value > $max) {
+                $predictedClass = $class;
+                $max = $value;
+            }
+        }
+        return $this->classes[$predictedClass];
     }
 
     /**
