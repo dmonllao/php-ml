@@ -97,7 +97,7 @@ class InvalidArgumentException extends \Exception
      */
     public static function invalidLayersNumber()
     {
-        return new self('Provide at least 1 output layer');
+        return new self('Provide at least 1 hidden layer');
     }
 
     /**

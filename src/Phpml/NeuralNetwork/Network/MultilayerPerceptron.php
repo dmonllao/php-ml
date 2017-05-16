@@ -32,7 +32,7 @@ class MultilayerPerceptron extends LayeredNetwork
      */
     public function __construct(int $inputLayerFeatures, array $hiddenLayers, array $classes, ActivationFunction $activationFunction = null)
     {
-        if (count($inputLayerFeatures) < 1) {
+        if (count($hiddenLayers) < 1) {
             throw InvalidArgumentException::invalidLayersNumber();
         }
 
