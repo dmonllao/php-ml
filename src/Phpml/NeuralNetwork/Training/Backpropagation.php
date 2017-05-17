@@ -4,27 +4,15 @@ declare(strict_types=1);
 
 namespace Phpml\NeuralNetwork\Training;
 
-use Phpml\NeuralNetwork\Network;
 use Phpml\NeuralNetwork\Node\Neuron;
-use Phpml\NeuralNetwork\Training;
 use Phpml\NeuralNetwork\Training\Backpropagation\Sigma;
 
-class Backpropagation implements Training
+class Backpropagation
 {
-    /**
-     * @var Network
-     */
-    private $network;
-
     /**
      * @var int
      */
     private $theta;
-
-    /**
-     * @var int
-     */
-    private $maxIterations;
 
     /**
      * @var array
@@ -37,52 +25,21 @@ class Backpropagation implements Training
     private $prevSigmas;
 
     /**
-     * @param Network $network
-     * @param int     $theta
+     * @param int $theta
      */
-    public function __construct(Network $network, int $theta = 1, int $maxIterations = 10000)
+    public function __construct(int $theta)
     {
-        $this->network = $network;
         $this->theta = $theta;
-        $this->maxIterations = $maxIterations;
     }
 
     /**
-     * @param array $samples
-     * @param array $targets
+     * @param array $layers
+     * @param mixed $targetClass
      */
-    public function train(array $samples, array $targets)
-    {
-        for ($i = 0; $i < $this->maxIterations; ++$i) {
-            $this->trainSamples($samples, $targets);
-        }
-    }
-
-    /**
-     * @param array $samples
-     * @param array $targets
-     */
-    private function trainSamples(array $samples, array $targets)
-    {
-        foreach ($targets as $key => $target) {
-            $this->trainSample($samples[$key], $target);
-        }
-    }
-
-    /**
-     * @param array $sample
-     * @param mixed $target
-     */
-    private function trainSample(array $sample, $target)
+    public function backpropagate(array $layers, $targetClass)
     {
 
-        // Feed-forward.
-        $this->network->setInput($sample)->getOutput();
-
-        $layers = $this->network->getLayers();
         $layersNumber = count($layers);
-
-        $targetClass = $this->network->getTargetClass($target);
 
         // Backpropagation.
         for ($i = $layersNumber; $i > 1; --$i) {
