@@ -114,10 +114,9 @@ class Backpropagation implements Training
         $sigma = $neuronOutput * (1 - $neuronOutput);
 
         if ($lastLayer) {
-            if ($targetClass == $key) {
+            $value = 0;
+            if ($targetClass === $key) {
                 $value = 1;
-            } else {
-                $value = 0;
             }
             $sigma *= ($value - $neuronOutput);
         } else {
