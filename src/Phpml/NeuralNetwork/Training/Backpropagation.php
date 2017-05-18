@@ -17,12 +17,12 @@ class Backpropagation
     /**
      * @var array
      */
-    private $sigmas;
+    private $sigmas = null;
 
     /**
      * @var array
      */
-    private $prevSigmas;
+    private $prevSigmas = null;
 
     /**
      * @param int $theta
@@ -55,6 +55,10 @@ class Backpropagation
             }
             $this->prevSigmas = $this->sigmas;
         }
+
+        // Clean some memory (also it helps make MLP persistency & children more maintainable).
+        $this->sigmas = null;
+        $this->prevSigmas = null;
     }
 
     /**
