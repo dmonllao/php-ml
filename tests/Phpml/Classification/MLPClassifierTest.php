@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace tests\Phpml\Classification;
 
 use Phpml\Classification\MLPClassifier;
-use Phpml\NeuralNetwork\Training\Backpropagation;
 use Phpml\NeuralNetwork\Node\Neuron;
 use Phpml\ModelManager;
 use PHPUnit\Framework\TestCase;

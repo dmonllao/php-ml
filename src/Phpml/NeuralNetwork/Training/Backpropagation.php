@@ -38,14 +38,12 @@ class Backpropagation
      */
     public function backpropagate(array $layers, $targetClass)
     {
-
         $layersNumber = count($layers);
 
         // Backpropagation.
         for ($i = $layersNumber; $i > 1; --$i) {
             $this->sigmas = [];
             foreach ($layers[$i - 1]->getNodes() as $key => $neuron) {
-
                 if ($neuron instanceof Neuron) {
                     $sigma = $this->getSigma($neuron, $targetClass, $key, $i == $layersNumber);
                     foreach ($neuron->getSynapses() as $synapse) {

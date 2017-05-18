@@ -131,13 +131,13 @@ abstract class MultilayerPerceptron extends LayeredNetwork implements Estimator,
      * @param array $sample
      * @param mixed $target
      */
-    protected abstract function trainSample(array $sample, $target);
+    abstract protected function trainSample(array $sample, $target);
 
     /**
      * @param array $sample
      * @return mixed
      */
-    protected abstract function predictSample(array $sample);
+    abstract protected function predictSample(array $sample);
 
     /**
      * @return void
