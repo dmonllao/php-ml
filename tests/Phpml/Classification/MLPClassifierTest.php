@@ -171,6 +171,18 @@ class MLPClassifierTest extends TestCase
     /**
      * @expectedException \Phpml\Exception\InvalidArgumentException
      */
+    public function testThrowExceptionOnInvalidPartialTrainingClasses()
+    {
+        $classifier = new MLPClassifier(2, [2], [0, 1]);
+        $classifier->partialTrain(
+            [[0, 1], [1, 0]],
+            [0, 2],
+            [0, 1, 2]
+        );
+    }
+    /**
+     * @expectedException \Phpml\Exception\InvalidArgumentException
+     */
     public function testThrowExceptionOnInvalidClassesNumber()
     {
         new MLPClassifier(2, [2], [0]);
