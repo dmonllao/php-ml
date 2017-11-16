@@ -109,6 +109,36 @@ class MLPClassifierTest extends TestCase
         $this->assertEquals('b', $network->predict([0, 0]));
     }
 
+    public function testBackpropagationPartialTrainingMulticlass()
+    {
+        // Single layer 2 classes.
+        $network = new MLPClassifier(2, [2], ['a', 'b', 'c', 'd'], 1000);
+        $network->partialTrain(
+            [[1, 0], [0, 1]],
+            ['a', 'c']
+        );
+
+        $this->assertEquals('a', $network->predict([1, 0])); // ok
+        $this->assertEquals('c', $network->predict([0, 1])); // ok
+
+        $network->partialTrain(
+            [[1, 1], [0, 0]],
+            ['d', 'b']
+        );
+
+        $inputs = [[1, 0], [0, 1], [1, 1], [0, 0]];
+        $predictions = $network->predict($inputs);
+        foreach ($predictions as $key => $prediction) {
+            $inputstr = json_encode($inputs[$key]);
+            echo "\nInput $inputstr: \nOutput: $prediction";
+        }
+
+        $this->assertEquals('a', $network->predict([1, 0])); // error
+        $this->assertEquals('c', $network->predict([0, 1])); // error
+        $this->assertEquals('d', $network->predict([1, 1])); // ok
+        $this->assertEquals('b', $network->predict([0, 0])); // ok
+    }
+
     public function testBackpropagationLearningMultilayer(): void
     {
         // Multi-layer 2 classes.
