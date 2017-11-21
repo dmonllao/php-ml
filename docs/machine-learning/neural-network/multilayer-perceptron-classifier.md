@@ -45,7 +45,7 @@ $mlp->partialTrain(
 
 ```
 
-You can update the learning rate between training runs:
+You can update the learning rate between partialTrain runs:
 
 ```
 $mlp->setLearningRate(0.1);
